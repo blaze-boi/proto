@@ -54,7 +54,7 @@ def login(name, email, password):
     else:
         return render_template('index.html', auth="Error")    
 
-def logout(curr_site):
+def logout():
     if 'email' in session:
         session.pop('email', None)
         return render_template("dashboard.html", auth="Logged out")
@@ -87,7 +87,7 @@ def dashboard():
 
     action = request.form.get("action")
     if action == "logout":
-        return logout(curr_site="dashboard.html")
+        return logout()
     return render_template("dashboard.html")
 
 
