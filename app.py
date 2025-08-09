@@ -57,7 +57,7 @@ def login(name, email, password):
 def logout(curr_site):
     if 'email' in session:
         session.pop('email', None)
-        return render_template(curr_site, auth="Logged out")
+        return render_template("dashboard.html", auth="Logged out")
     else:
         return render_template('index.html', auth="Error: Not logged in")
 
