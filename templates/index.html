@@ -67,9 +67,9 @@
     <input type="checkbox" class="form-check-input" id="exampleCheck1">
     <label class="form-check-label" for="exampleCheck1">Check me out</label>
   </div>
-  <button type="submit" class="btn btn-primary" name="action" value="signup">Sign up</button>
-  <button type="submit" class="btn btn-primary" name="action" value="login">Login</button>
-    <button type="submit" class="btn btn-primary" name="action" value="logout">Logout</button>
+  <button type="submit" class="btn btn-primary" name="action" value="signup" onclick="go_to_dashboard('{{ auth }}')">Sign up</button>
+  <button type="submit" class="btn btn-primary" name="action" value="login" onclick="go_to_dashboard('{{ auth }}')">Login</button>
+  <button type="submit" class="btn btn-primary" name="action" value="logout" onclick="go_to_dashboard('{{ auth }}')">Logout</button>
 
 </form>
 
