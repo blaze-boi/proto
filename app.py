@@ -40,7 +40,7 @@ def signup(name, email, password):
             "password": password
         })
         session['email'] = email
-        return render_template('index.html', auth="Signed up")
+        return render_template('dashboard.html', auth="Signed up")
     else:
         return render_template('index.html', auth="Error")
 
@@ -49,7 +49,7 @@ def login(name, email, password):
     user = mongo.db.users.find_one({"email": email})
     if user and user['password'] == password:
         session['email'] = email
-        return render_template('index.html', auth="Logged in")
+        return render_template('dashboard.html', auth="Logged in")
     else:
         return render_template('index.html', auth="Error")    
 
