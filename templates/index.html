@@ -76,6 +76,14 @@
 
 <p>{{ auth }}</p>
 
-
+<script>
+  function go_to_dashboard(auth) {
+    if (auth == "Signed up" || auth == "Logged in") {
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Some error occurred. Please try again.");
+    }
+  }
+</script>
   </body>
 </html>
