@@ -83,8 +83,6 @@ def upload():
 
 @app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
-    return render_template("dashboard.html") 
-
     action = request.form.get("action")
     if request.method == "POST" and action == "logout":
         return logout()
@@ -93,7 +91,8 @@ def dashboard():
             return render_template("dashboard.html", auth="Logged in")
         else:
             return render_template("index.html", auth="Not logged in")
-
+    return render_template("dashboard.html")
+    
 
 
 
