@@ -86,9 +86,14 @@ def dashboard():
     return render_template("dashboard.html") 
 
     action = request.form.get("action")
-    if action == "logout":
+    if request.method == "POST" and action == "logout":
         return logout()
-    return render_template("dashboard.html")
+    elif request.method == "GET":
+        if 'email' in session:
+            return render_template("dashboard.html", auth="Logged in")
+        else:
+            return render_template("index.html", auth="Not logged in")
+
 
 
 
