@@ -29,7 +29,8 @@ def submit():
     elif request.form.get("action") == "login":
         return login(name, email, password)
     elif request.form.get("action") == "logout":
-        return logout()
+        curr_site = "index.html"
+        return logout(curr_site)
     return redirect("/")
 
 def signup(name, email, password):
@@ -53,11 +54,10 @@ def login(name, email, password):
     else:
         return render_template('index.html', auth="Error")    
 
-@app.route("/logout", methods=["POST", "GET"])
-def logout():
+def logout(curr_site):
     if 'email' in session:
         session.pop('email', None)
-        return render_template('index.html', auth="Logged out")
+        return render_template(curr_site, auth="Logged out")
     else:
         return render_template('index.html', auth="Error: Not logged in")
 
@@ -81,23 +81,15 @@ def upload():
 
     return render_template("upload.html")
 
-@app.route("/dashboard", methods=["GET"])
+@app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
     return render_template("dashboard.html") 
 
-@app.route("/posting", methods=["POST", "GET"])
-def posting():
-    if request.method == "POST":
-        file = request.files["file"]
-        if file:
-            # Upload to Cloudinary
-            result = cloudinary.uploader.upload(file)
-            url = result["secure_url"]
+    action = request.form.get("action")
+    if action == "logout":
+        return logout(curr_site="dashboard.html")
+    return render_template("dashboard.html")
 
-            # Save URL to MongoDB
-            mongo.db.images.insert_one({"url": url})
-            return render_template("posting.html", img_url=url)
-    return render_template("posting.html")
 
 
 if __name__ == "__main__":
