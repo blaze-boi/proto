@@ -5,9 +5,12 @@ from flask_pymongo import PyMongo
 import cloudinary
 import cloudinary.uploader
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_socketio import SocketIO, send, socketio
+
 
 app = Flask(__name__)
 app.secret_key = "Cookies"
+socketio = SocketIO(app, cors_allowed_origins="*")
 app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
 mongo = PyMongo(app)    
 
@@ -61,6 +64,28 @@ def logout():
     else:
         return render_template('index.html', auth="Error: Not logged in")
 
+@socketio.on('message')
+def handle_post(msg):
+    action = msg.get('action')
+    if action == 'post':
+        title = msg.get('title')
+        content = msg.get('content')
+        mongo.db.posts.insert_one({
+            "title": title,
+            "content": content
+        })
+        print("Received post:", msg)
+        if msg:
+            send(msg, broadcast=True)
+    elif action == 'get_posts':
+        posts = mongo.db.posts.find()
+        post_a = []
+        for post in posts:
+            post_a.append({
+                "title": post['title'],
+                "content": post['content']
+            })
+        send({ 'action': 'get_posts', 'posts': post_a })
 
 @app.route("/")
 def hello_world():
@@ -90,7 +115,7 @@ def dashboard():
         if 'email' in session:
             return render_template("dashboard.html", auth="Logged in")
         else:
-            return render_template("index.html", auth="Not logged in")
+            return redirect("/auth")
     return render_template("dashboard.html")
     
 

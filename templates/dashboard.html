@@ -53,5 +53,58 @@
   <button type="submit" class="btn btn-primary" name="action" value="logout">Logout</button>
 </form>
 <p>{{ auth }}</p>
+
+
+    <input type="text" id="title" placeholder="Type the title here...">
+    <input type="text" id="message" placeholder="Type your message here...">
+
+    <button id="sendBtn">send</button>
+    <div id="messages">
+
+    </div>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    
+    
+<script>
+    const sendBtn = document.getElementById('sendBtn');
+    const messageInput = document.getElementById('message');
+    const titleInput = document.getElementById('title');
+    const messagesDiv = document.getElementById('messages');
+
+    const socket = io();
+    
+    socket.on('connect', () => {
+    socket.send({ action: 'get_posts' });
+    console.log('Connected to the server');
+});
+
+        sendBtn.addEventListener('click', () => {
+        const title = titleInput.value;
+        const content = messageInput.value;
+        const action = "post";
+        if(title && content) {
+            socket.send({ title, content, action });
+        }
+    });
+
+  socket.on('message', (msg) => {
+    if(msg.action === 'get_posts') {
+      messagesDiv.innerHTML = '';  // Clear old messages
+      msg.posts.forEach(post => {
+        const msgElem = document.createElement('div');
+        msgElem.innerHTML = `<h1>${post.title}</h1><p>${post.content}</p>`;
+        messagesDiv.prepend(msgElem);
+      });
+    } else {
+      // For new single post messages
+      const msgElem = document.createElement('div');
+      msgElem.innerHTML = `<h1>${msg.title}</h1><p>${msg.content}</p>`;
+      messagesDiv.prepend(msgElem);
+    }
+  });
+
+</script>
+
 </body>
 </html>
